@@ -1,0 +1,40 @@
+# Byte-compiled / Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+
+# Excel / CSV data files
+data/*.xlsx
+data/*.csv
+
+# Matplotlib figures
+*.png
+*.jpg
+
+# Environment variables
+.env
+
+# FastAPI / Uvicorn auto-reload files
+*.pyc
