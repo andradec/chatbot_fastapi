@@ -3,6 +3,6 @@ uvicorn==0.30.6
 pandas==2.2.2
 scikit-learn==1.5.1
 numpy==1.26.4
-openpyxl==3.1.5   # para leitura de arquivos Excel
-python-multipart==0.0.9  # caso você vá trabalhar com upload de arquivos
+openpyxl==3.1.5   
+python-multipart==0.0.9
 pydantic==2.9.2

@@ -1,0 +1,51 @@
+# Chatbot SENAI - Previsão de Vendas 📊🤖
+
+Este projeto é um **chatbot inteligente** desenvolvido em **FastAPI** que permite interação via API para previsão de vendas.  
+Ele utiliza **Machine Learning (Scikit-Learn)** para processar dados e retornar previsões de forma simples e rápida.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+- [FastAPI](https://fastapi.tiangolo.com/) — Framework web rápido e moderno
+- [Uvicorn](https://www.uvicorn.org/) — Servidor ASGI para rodar a API
+- [Pandas](https://pandas.pydata.org/) — Manipulação e análise de dados
+- [Scikit-Learn](https://scikit-learn.org/) — Treinamento e previsão com ML
+- [NumPy](https://numpy.org/) — Suporte a cálculos numéricos
+- [OpenPyXL](https://openpyxl.readthedocs.io/) — Leitura de arquivos Excel
+
+---
+
+## 📂 Estrutura do Projeto
+chatbot_senai/
+│── frontend/
+│ ├── api.py # Código principal da API FastAPI
+│── models/
+│ ├── modelo.pkl # Modelo de Machine Learning treinado
+│── data/
+│ ├── vendas.xlsx # Base de dados (exemplo)
+│── requirements.txt # Dependências do projeto
+│── README.md # Documentação do projeto
+
+
+
+---
+
+## ⚙️ Instalação e Execução
+
+### 1️⃣ Clone o repositório
+```bash
+git clone https://github.com/seu-usuario/chatbot_senai.git
+cd chatbot_senai
+
+
+python -m venv .venv
+source .venv/bin/activate   # Linux/Mac
+.venv\Scripts\activate      # Windows
+
+
+pip install -r requirements.txt
+
+uvicorn frontend.api:app --reload
+```
+A API estará disponível em: 👉 http://127.0.0.1:8000/docs
+
