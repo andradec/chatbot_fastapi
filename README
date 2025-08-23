@@ -34,7 +34,7 @@ chatbot_senai/
 
 ### 1️⃣ Clone o repositório
 ```bash
-git clone https://github.com/seu-usuario/chatbot_senai.git
+git clone https://github.com/andradec/chatbot_fastapi.git
 cd chatbot_senai
 
 2️⃣ Crie um ambiente virtual
