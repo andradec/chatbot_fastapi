@@ -79,7 +79,7 @@ def validar_dados():
     log.append("Arquivos limpos salvos como *_limpo.xlsx na pasta data/")
 
     # 9️⃣ Resultado
-    print("=== LOG DE VALIDAÇÃO E LIMPEZA ===")
+    print("== LOG DE VALIDAÇÃO E LIMPEZA ==")
     for l in log:
         print("-", l)
 

@@ -25,7 +25,7 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
-# Excel / CSV data files
+# Dados
 data/*.xlsx
 data/*.csv
 
