@@ -1,4 +1,4 @@
-# Chatbot SENAI - Previsão de Vendas 📊🤖
+# Chatbot - Previsão de Vendas 📊🤖
 
 Este projeto é um **chatbot inteligente** desenvolvido em **FastAPI** que permite interação via API para previsão de vendas.  
 Ele utiliza **Machine Learning (Scikit-Learn)** para processar dados e retornar previsões de forma simples e rápida.
@@ -48,4 +48,5 @@ pip install -r requirements.txt
 uvicorn frontend.api:app --reload
 ```
 A API estará disponível em: 👉 http://127.0.0.1:8000/docs
+
 
