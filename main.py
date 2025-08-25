@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from valida_dados import validar_dados
+from data_test.valida_dados import validar_dados
 from backend.seed import seed_db_from_files
 from frontend.api import router as api_router
 

@@ -1,13 +1,10 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-# Engine do banco de dados SQLite
 ENGINE = create_engine("sqlite:///chatbot.db", echo=True)
 
-# Factory de sessões
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 
-# Base para os models
 Base = declarative_base()
 
 # -----------------------------

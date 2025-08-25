@@ -19,10 +19,16 @@ Ele utiliza **Machine Learning (Scikit-Learn)** para processar dados e retornar 
 chatbot_senai/
 │── frontend/
 │ ├── api.py # Código principal da API FastAPI
-│── models/
-│ ├── modelo.pkl # Modelo de Machine Learning treinado
+│── beackend/
+│ ├── database.py # Responsavel pela conexão com o banco de dados
+│ ├── service.py # Lógica de negócio e manipulação de dados
+│ ├── seed.py # Script para popular o banco de dados a partir dos arquivos Excel
+│── data_test/
+│ ├── valida_dados.py # Script para validar os dados dos arquivos Excel
 │── data/
-│ ├── vendas.xlsx # Base de dados (exemplo)
+│ ├── produtos.xlsx # Base de dados 
+│ ├── vendas.xlsx # Base de dados 
+│ ├── vendedores.xlsx # Base de dados 
 │── requirements.txt # Dependências do projeto
 │── README.md # Documentação do projeto
 

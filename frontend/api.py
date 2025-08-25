@@ -19,7 +19,7 @@ async def chat_endpoint(payload: Pergunta):
     # VENDAS
     # =====================
     if "venda" in pergunta:
-        # 1️⃣ Total de vendas de um produto
+        # Total de vendas de um produto
         if match := re.search(r'produto (\d+)', pergunta):
             id_prod = int(match.group(1))
             total = service.total_vendas_produto(id_prod)
@@ -28,7 +28,7 @@ async def chat_endpoint(payload: Pergunta):
                 "resposta": f"Total de vendas do produto {id_prod}: R$ {total['total_vendas']:.2f}"
             }
 
-        # 2️⃣ Total de vendas de um vendedor
+        # Total de vendas de um vendedor
         elif match := re.search(r'vendedor (\d+)', pergunta):
             id_vend = int(match.group(1))
             total = service.total_vendas_vendedor(id_vend)
@@ -37,12 +37,12 @@ async def chat_endpoint(payload: Pergunta):
                 "resposta": f"Total de vendas do vendedor {id_vend}: R$ {total['total_vendas']:.2f}"
             }
 
-        # 3️⃣ Vendas por região
-        elif "região" in pergunta:
+        # Vendas por região
+        elif re.search(r"regi[aã]o", pergunta, re.I):
             vendas_regiao = service.vendas_por_regiao()
             return {
                 "pergunta": pergunta,
-                "resposta": "Vendas por região:",
+                "resposta": "Valor total de vendas por região:",
                 "dados": vendas_regiao
             }
 
@@ -50,8 +50,22 @@ async def chat_endpoint(payload: Pergunta):
     # PRODUTOS
     # =====================
     if "produto" in pergunta:
-        # 1️⃣ Detalhes do produto
-        if match := re.search(r'produto (\d+)', pergunta):
+        if "prever" in pergunta or "previsao" in pergunta:
+            if match := re.search(r'produto (\d+)', pergunta):
+                id_prod = int(match.group(1))
+                resultado = service.prever_vendas_produto_trimestre(id_prod)
+                if "erro" in resultado:
+                    return {"pergunta": pergunta, "resposta": resultado["erro"]}
+        
+                return {
+                    "pergunta": pergunta,
+                    "grafico_img": resultado["grafico"]
+                }
+
+        
+
+        # Detalhes do produto
+        elif match := re.search(r'produto (\d+)', pergunta):
             id_prod = int(match.group(1))
             detalhes = service.detalhes_produto(id_prod)
             return {
@@ -60,14 +74,16 @@ async def chat_endpoint(payload: Pergunta):
                 "dados": detalhes
             }
 
-        # 2️⃣ Top produtos por categoria e ano
+        # Top produtos por categoria e ano
         elif "categoria" in pergunta and "ano" in pergunta:
             filtros = service.extrair_filtros_produtos(pergunta)
             if filtros.get("categoria"):
                 top_n = filtros.get("top_n", 5)
                 categoria = filtros["categoria"]
-                ano = filtros.get("ano")  # opcional
-                produtos = service.top_produtos_categoria_ano(categoria=categoria, ano=ano, top_n=top_n)
+                ano = filtros.get("ano")
+                produtos = service.top_produtos_categoria_ano(
+                    categoria=categoria, ano=ano, top_n=top_n
+                )
 
                 return {
                     "pergunta": pergunta,
@@ -75,50 +91,41 @@ async def chat_endpoint(payload: Pergunta):
                     "produtos": produtos
                 }
 
-        # 3️⃣ Previsão de vendas de produto
-        elif "prever" in pergunta or "previsao" in pergunta:
-            if match := re.search(r'produto (\d+)', pergunta):
-                id_prod = int(match.group(1))
-                previsao, img_path = service.prever_vendas_produto(id_prod)
+        # =====================
+        # VENDEDORES
+        # =====================
+        if "vendedor" in pergunta:
+            # Top vendedores
+            if "top" in pergunta:
+                resultado = service.top_vendedores()
                 return {
                     "pergunta": pergunta,
-                    "resposta": f"Previsão de vendas do produto {id_prod} para o próximo trimestre:",
-                    "previsao": round(previsao, 2),
-                    "grafico_img": img_path
+                    "resposta": "Top vendedores:",
+                    "dados": resultado,
+                    "grafico": {
+                        "tipo": "bar",
+                        "labels": [r['nome'] for r in resultado],
+                        "values": [r['crescimento'] for r in resultado]
+                    }
                 }
 
-    # =====================
-    # VENDEDORES
-    # =====================
-    if "vendedor" in pergunta:
-        # 1️⃣ Top vendedores
-        if "top" in pergunta:
-            resultado = service.top_vendedores()
-            return {
-                "pergunta": pergunta,
-                "resposta": "Top vendedores:",
-                "dados": resultado,
-                "grafico": {
-                    "tipo": "bar",
-                    "labels": [r['nome'] for r in resultado],
-                    "values": [r['crescimento'] for r in resultado]
+            elif match := re.search(r'vendedor (\d+)', pergunta):
+                id_vend = int(match.group(1))
+                resultado = service.potencial_crescimento_vendedor(id_vend)
+
+                return {
+                    "pergunta": pergunta,
+                    "resposta": f"Informações do vendedor {resultado['nome_vendedor']}:",
+                    "potencial_crescimento": round(resultado['potencial_crescimento'], 4),
+                    "regiao": resultado['regiao'],
+                    "vendas_totais": resultado['vendas_totais'],
+                    "produtos_mais_vendidos": resultado['produtos_mais_vendidos']
                 }
-            }
 
-        # 2️⃣ Potencial de crescimento de um vendedor
-        elif match := re.search(r'vendedor (\d+)', pergunta):
-            id_vend = int(match.group(1))
-            resultado = service.potencial_crescimento_vendedor(id_vend)
-            potencial = resultado['potencial_crescimento']
-            nome = resultado['nome_vendedor']
-            regiao = resultado['regiao']
+    
 
-            return {
-                "pergunta": pergunta,
-                "resposta": f"Potencial médio de crescimento do vendedor {nome}:",
-                "potencial": round(potencial, 4),
-                "regiao": regiao
-            }
+
+
 
 
     # --------------------

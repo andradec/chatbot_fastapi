@@ -11,7 +11,7 @@ def validar_dados():
     erros = []
     log = []
 
-    # 1️⃣ Verificar existência dos arquivos
+    # Verificar existência dos arquivos
     for nome, path in arquivos.items():
         if not os.path.exists(path):
             erros.append(f"Arquivo não encontrado: {path}")
@@ -22,12 +22,12 @@ def validar_dados():
             print("-", e)
         return False
 
-    # 2️⃣ Carregar arquivos
+    # Carregar arquivos
     df_produtos = pd.read_excel(arquivos["Produtos"])
     df_vendedores = pd.read_excel(arquivos["Vendedores"])
     df_vendas = pd.read_excel(arquivos["Vendas"])
 
-    # 3️⃣ Valores ausentes: remover ou preencher
+    # Valores ausentes: remover ou preencher
     for df, nome, criticas in zip(
         [df_produtos, df_vendedores, df_vendas],
         ["Produtos", "Vendedores", "Vendas"],
@@ -39,7 +39,7 @@ def validar_dados():
             log.append(f"{nome}: {n_nan} valores ausentes em colunas críticas, serão removidos")
             df.dropna(subset=criticas, inplace=True)
 
-    # 4️⃣ Corrigir tipos
+    # Corrigir tipos
     try:
         df_produtos["R$_Unit"] = pd.to_numeric(df_produtos["R$_Unit"], errors="coerce")
         df_vendas["Quantidade"] = pd.to_numeric(df_vendas["Quantidade"], errors="coerce").astype(int)
@@ -49,7 +49,7 @@ def validar_dados():
     except Exception as e:
         erros.append(f"Problema de tipo: {e}")
 
-    # 5️⃣ Integridade: remover vendas com produto ou vendedor inexistente
+    # Integridade: remover vendas com produto ou vendedor inexistente
     prod_ids = set(df_produtos["Id_Produto"])
     vend_ids = set(df_vendedores["Id_Vendedor"])
     mask_prod = df_vendas["Id_Produto"].isin(prod_ids)
@@ -59,26 +59,25 @@ def validar_dados():
         log.append(f"Vendas: {removed} registros removidos por referenciar produto ou vendedor inexistente")
         df_vendas = df_vendas[mask_prod & mask_vend]
 
-    # 6️⃣ Duplicidades
+    # Duplicidades
     dup = df_vendas["Id_Venda"].duplicated().sum()
     if dup > 0:
         log.append(f"{dup} duplicidades em Id_Venda removidas")
         df_vendas = df_vendas.drop_duplicates(subset=["Id_Venda"])
 
-    # 7️⃣ Outliers básicos
+    # Outliers básicos
     mask_out = (df_vendas["Quantidade"] <= 0) | (df_vendas["R$_Unit"] <= 0)
     outliers = df_vendas[mask_out]
     if not outliers.empty:
         log.append(f"{len(outliers)} registros com quantidade ou preço <= 0 removidos")
         df_vendas = df_vendas[~mask_out]
 
-    # 8️⃣ Salvar arquivos limpos (opcional)
+    # Salvar arquivos limpos (opcional)
     df_produtos.to_excel("data/produtos_limpo.xlsx", index=False)
     df_vendedores.to_excel("data/vendedores_limpo.xlsx", index=False)
     df_vendas.to_excel("data/vendas_limpo.xlsx", index=False)
     log.append("Arquivos limpos salvos como *_limpo.xlsx na pasta data/")
 
-    # 9️⃣ Resultado
     print("== LOG DE VALIDAÇÃO E LIMPEZA ==")
     for l in log:
         print("-", l)
